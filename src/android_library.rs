@@ -270,6 +270,7 @@ impl AndroidLibrary<'_> {
                 if !is_incompatible && page::ceil(maximum as *const ()) as usize > start {
                     is_incompatible = true;
                     warn!("library has not been made for this CPU. It may crash!");
+                    return Err(AndroidLoaderErr::IncompatibleError("Incompatible memory layout".to_string()).into());
                 }
 
                 if start < minimum {
@@ -445,7 +446,8 @@ impl AndroidLibrary<'_> {
 #[derive(Debug)]
 enum AndroidLoaderErr {
     ElfParsingError(String),
-    UnsupportedRelocation(RelocType)
+    UnsupportedRelocation(RelocType),
+    IncompatibleError(String),
 }
 
 impl Display for AndroidLoaderErr {
